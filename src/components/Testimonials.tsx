@@ -1,3 +1,5 @@
+import React from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 interface Testimonial {
@@ -41,10 +43,12 @@ export const TestimonialSection = ({
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                 {testimonials[currentIndex].avatar ? (
-                  <img 
+                  <Image 
                     src={testimonials[currentIndex].avatar} 
                     alt={testimonials[currentIndex].name}
                     className="rounded-full"
+                    width={48}
+                    height={48}
                   />
                 ) : (
                   <span className="font-medium">
@@ -67,6 +71,8 @@ export const TestimonialSection = ({
                 prev === 0 ? testimonials.length - 1 : prev - 1
               )}
               className="p-2 rounded-full border hover:bg-primary/10 transition-colors"
+              aria-label="Previous testimonial"
+              title="Previous testimonial"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -75,6 +81,8 @@ export const TestimonialSection = ({
                 (prev + 1) % testimonials.length
               )}
               className="p-2 rounded-full border hover:bg-primary/10 transition-colors"
+              aria-label="Next testimonial"
+              title="Next testimonial"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
