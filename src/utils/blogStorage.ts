@@ -3,8 +3,8 @@ const BLOG_KEY = 'blogs';
 
 export function getBlogs(): BlogPost[] {
     if (typeof window === 'undefined') return [];
-    const raw = localStorage.getItem(BLOG_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const data = localStorage.getItem('blogs');
+    return data ? JSON.parse(data) : [];
 
 }
 

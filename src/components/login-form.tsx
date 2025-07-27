@@ -1,49 +1,54 @@
-
-'use client';
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+"use client";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { login } from "@/utils/auth";
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-
-
-
-
-
-
-
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { getCurrentUser, login } from "@/utils/auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function LoginForm({
   className,
   ...props
- 
 }: React.ComponentProps<"div">) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const router = useRouter();
-  
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // ✅ Check if user is already logged in
+  useEffect(() => {
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      setIsAuthenticated(true);
+      if (currentUser.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/blog");
+      }
+    }
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await login(username, password);
-    if (success) {
-      router.push('/admin/');
+    const result = login(username, password);
 
+    if (result === "admin") {
+      router.push("/admin");
+    } else if (result === "user") {
+      router.push("/blog");
     } else {
-      console.error();
-      alert ("Invalid Credentials");
+      alert("Invalid credentials");
     }
   };
-
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -51,7 +56,7 @@ export function LoginForm({
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your credentials to log in.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -62,47 +67,38 @@ export function LoginForm({
                 <Input
                   id="username"
                   value={username}
-                  type="username"
+                  type="text"
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="m@example.com"
+                  placeholder="admin or user"
                   required
                 />
               </div>
               <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
-                 id="password"
-                 value={password} 
-                 type="password"
+                  id="password"
+                  value={password}
+                  type="password"
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter ur password" required />
+                  placeholder="password"
+                  required
+                />
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
                   Login
                 </Button>
-                {/* <Button variant="outline" className="w-full">
-                  Login with Google
-                </Button> */}
+              </div>
+              <div className="mt-4 text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <a href="/sign-up" className="underline underline-offset-4">
+                  Sign up
+                </a>
               </div>
             </div>
-            {/* <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div> */}
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

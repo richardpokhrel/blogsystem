@@ -1,10 +1,10 @@
 "use client";
 
 import { NewsCard } from "@/components/ArticleCard";
-import { FeaturedArticleCard } from "./ArticleFeaturedCard";
+import { FeaturedArticleCard } from '@/components/ArticleFeaturedCard';
 import { getBlogs } from "@/utils/blogStorage";
 import { useState, useEffect } from "react";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 

@@ -1,27 +1,56 @@
-'use client';
+// components/Navbar.tsx
+'use client'
 import Link from "next/link"
-import { useState } from "react"
-import { Menu, X, ChevronDown } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { useState, useEffect } from "react"
+import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils";
-import NewsPage from "./NewsPage";
+import { DropdownMenuTrigger,DropdownMenu, DropdownMenuItem, DropdownMenuContent } from "@radix-ui/react-dropdown-menu"
+import { getCurrentUser, logoutUser } from '@/utils/auth';
 
-export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
+interface NavbarProps {
+  isLoggedIn?: boolean;
+}
+
+export const Navbar = (props: NavbarProps) => {
+   const { isLoggedIn = false } = props;
   const [isOpen, setIsOpen] = useState(false)
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
+  const pathname = usePathname()
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn);
+  const [username, setUsername] = useState('');
 
-  const navItems = [
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      setLoggedIn(true);
+      setUsername(user.username);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    logoutUser();
+    setLoggedIn(false);
+    setUsername('');
+    window.location.href = '/';
+  };
+
+  const publicNavItems = [
     { name: "Home", href: "/" },
-    { name: "Products", href: "/features" },
-    { name: "About Us", href: "/about" },
+    { name: "News", href: "/news" },
+    { name: "Blog", href: "/blog" },
   ]
+
+
+
+
+  const userNavItems = [
+    { name: "Dashboard", href: "/user/dashboard" },
+    { name: "Profile", href: "/user/profile" },
+    { name: "Settings", href: "/user/settings" },
+  ]
+
+  const navItems = isLoggedIn ? userNavItems : publicNavItems
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -38,7 +67,7 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
         </Button>
 
         {/* Logo */}
-        <Link href="/" className="flex items-center">
+        <Link href={isLoggedIn ? "/user/dashboard" : "/"} className="flex items-center">
           <span className="text-xl font-semibold tracking-tight">minimal</span>
           <span className="text-xl font-semibold text-primary">.</span>
         </Link>
@@ -49,7 +78,9 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className={`text-sm font-medium transition-colors ${
+                pathname === item.href ? 'text-primary' : 'hover:text-primary'
+              }`}
             >
               {item.name}
             </Link>
@@ -59,30 +90,11 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
         {/* Auth section */}
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="/avatars/01.png" alt="User" />
-                    <AvatarFallback>US</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuItem className="flex flex-col items-start">
-                  <div className="text-xs font-medium">Signed in as</div>
-                  <div className="text-xs text-primary">user@example.com</div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem className="text-red-600 focus:text-red-600">
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserDropdown />
           ) : (
             <Button asChild variant="outline" size="sm">
-              <Link href="/login">Login</Link>
+              <Link href="/sign-in
+              ">Login</Link>
             </Button>
           )}
         </div>
@@ -90,32 +102,80 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="lg:hidden">
-          <div className="container space-y-4 px-4 pb-6 pt-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="-mx-4 block px-4 py-2 text-sm font-medium transition-colors hover:text-primary"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-            <div className="pt-4">
-              {isLoggedIn ? (
-                <Button variant="outline" className="w-full">
-                  Account
-                </Button>
-              ) : (
-                <Button className="w-full" asChild>
-                  <Link href="/login">Login</Link>
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
+        <MobileMenu 
+          navItems={navItems} 
+          isLoggedIn={isLoggedIn} 
+          onClose={() => setIsOpen(false)} 
+        />
       )}
     </header>
+  )
+}
+
+// Separate components for better organization
+function UserDropdown({ username, onLogout }: { username: string; onLogout: () => void }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="/avatars/01.png" alt="User" />
+            <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuItem className="flex flex-col items-start">
+          <div className="text-xs font-medium">Signed in as</div>
+          <div className="text-xs text-primary">{username}</div>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/user/profile">Profile</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/user/settings">Settings</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="text-red-600 focus:text-red-600 cursor-pointer"
+          onClick={onLogout}
+        >
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+function MobileMenu({ navItems, isLoggedIn, onClose }: { 
+  navItems: any[], 
+  isLoggedIn: boolean, 
+  onClose: () => void 
+}) {
+  return (
+    <div className="lg:hidden">
+      <div className="container space-y-4 px-4 pb-6 pt-2">
+        {navItems.map((item) => (
+          <Link
+            key={item.name}
+            href={item.href}
+            className="-mx-4 block px-4 py-2 text-sm font-medium transition-colors hover:text-primary"
+            onClick={onClose}
+          >
+            {item.name}
+          </Link>
+        ))}
+        <div className="pt-4">
+          {isLoggedIn ? (
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/user/profile">Account</Link>
+            </Button>
+          ) : (
+            <Button className="w-full" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }

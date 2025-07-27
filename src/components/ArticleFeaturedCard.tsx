@@ -8,7 +8,7 @@ import { CalendarDays, Clock } from "lucide-react"
 
 export const FeaturedArticleCard = ({ article }) => (
   <div className="mb-16">
-    <div className="relative overflow-hidden rounded-2xl border bg-card shadow-sm">
+    <div className="relative  rounded-2xl border bg-card shadow-sm">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div className="h-full min-h-[400px] bg-gradient-to-r from-primary/10 to-primary/5 p-8 md:p-12">
           <div className="flex h-full flex-col justify-between">

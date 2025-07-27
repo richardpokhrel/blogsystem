@@ -1,21 +1,23 @@
-// src/app/layout.tsx
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+// app/layout.tsx
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { PublicLayout } from '@/components/PublicLayout'
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
-export const metadata = {
-  title: "Your Blog",
-  description: "Professional blog system",
-};
+const inter = Inter({ subsets: ['latin'] })
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {children}
+      <body className={inter.className}>
+        <PublicLayout>
+          {children}
+        </PublicLayout>
       </body>
     </html>
-  );
+  )
 }

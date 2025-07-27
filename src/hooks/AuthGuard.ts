@@ -1,6 +1,6 @@
 import {  useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { isAuthenticated } from '@/utils/auth';
+import { isAdminAuthenticated } from '@/utils/auth';
 
 
 export function useAuthGuard() {
@@ -8,7 +8,7 @@ export function useAuthGuard() {
     const [checking, setchecking ] = useState(true);
 
     useEffect(() => {
-        const auth = isAuthenticated();
+        const auth = isAdminAuthenticated();
         if (!auth) {
             router.replace('sign-in');
 

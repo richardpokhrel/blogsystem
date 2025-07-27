@@ -102,6 +102,12 @@ const TextArea = ({
 const ImageUpload = ({ images, setImages, maxImages = 5 }) => {
   const [dragActive, setDragActive] = useState(false);
 
+
+
+
+
+
+
   const handleFiles = (files) => {
     const fileArray = Array.from(files);
     const newImages = [];
