@@ -70,7 +70,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <link href="/login" className="underline underline-offset-4">Login</Link>
+            <Link href="/login" className="underline underline-offset-4">Login</Link>
           </div>
         </CardContent>
       </Card>
