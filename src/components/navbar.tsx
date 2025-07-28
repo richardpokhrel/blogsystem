@@ -147,7 +147,7 @@ function UserDropdown({ username, onLogout }: { username: string; onLogout: () =
 }
 
 function MobileMenu({ navItems, isLoggedIn, onClose }: { 
-  navItems: any[], 
+  navItems: { name: string; href: string }[], 
   isLoggedIn: boolean, 
   onClose: () => void 
 }) {

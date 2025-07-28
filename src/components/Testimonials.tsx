@@ -38,7 +38,7 @@ export const TestimonialSection = ({
           <div className="p-8 bg-card rounded-xl shadow-sm border relative">
             <Quote className="absolute top-8 left-8 h-6 w-6 text-primary/20" />
             <p className="text-lg italic mb-6">
-              "{testimonials[currentIndex].quote}"
+              &#34;{testimonials[currentIndex].quote}&#34;
             </p>
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">

@@ -2,16 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-
+import Link from 'next/link';
 
 import { getBlogs } from '@/utils/blogStorage';
 
 import { isUserAuthenticated, getCurrentUser, userExists } from "@/utils/auth";
 import { RatingComponent } from '@/components/starRating';
 import  { CommentForm } from '@/components/comment';
-
-
-
 
 interface BlogPost {
   id: string;
@@ -42,11 +39,9 @@ interface Rating {
   createdAt: string;
 }
 
-
-
 export default function BlogDetailPage() {
     const [isLoggedIn, setisLoggedIn] = useState(false);
-    const [User, setUser] = useState(null);
+    const [User, setUser] = useState<any>(null);
 
      useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -80,7 +75,7 @@ export default function BlogDetailPage() {
  {
     return (
       <div className="text-sm text-red-600">
-        Please <a href="/login" className="underline text-blue-600">log in</a> to leave a comment or rate.
+        Please <Link href="/login" className="underline text-blue-600">log in</Link> to leave a comment or rate.
       </div>
     );
   }
@@ -110,63 +105,8 @@ console.log("localStorage.loggedInUser:", localStorage.getItem("loggedInUser"));
 
        
 
-      <CommentForm blogId={article.id} user={User} />
+      <CommentForm blogId={article.id} />
 
-
-
-
-
-
-
-        {/* <div className="border-t pt-6">
-        <h2 className="text-2xl font-semibold mb-2">Comments & Ratings</h2>
-        <p className="text-sm text-gray-500 mb-4">Average Rating: ⭐ {averageRating}</p>
-
-        {comments.length > 0 ? (
-          comments.map((c) => (
-            <div key={c.id} className="mb-4 border p-4 rounded bg-gray-50">
-              <div className="text-sm text-gray-600">{c.user} — ⭐ {c.rating}</div>
-              <p className="mt-1">{c.comment}</p>
-              <p className="text-xs text-gray-400 mt-1">{new Date(c.createdAt).toLocaleString()}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No comments yet.</p>
-        )}
-      </div> */}
-
-      {/* Add comment */}
-      {/* <div className="mt-8 border-t pt-6">
-        <h3 className="text-xl font-semibold mb-2">Leave a Comment</h3>
-        <textarea
-          className="w-full border p-2 rounded mb-2"
-          rows={3}
-          placeholder="Write your comment..."
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-        />
-        <div className="flex items-center gap-4 mb-4">
-          <label htmlFor="rating">Rating:</label>
-          <select
-            id="rating"
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-            className="border p-1 rounded"
-          >
-            {[1, 2, 3, 4, 5].map((num) => (
-              <option key={num} value={num}>
-                {num} ⭐
-              </option>
-            ))}
-          </select>
-        </div>
-        <button
-          onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Submit Comment
-        </button>
-      </div> */}
       </div>
     </div>
   );

@@ -1,34 +1,25 @@
-import { Search, User, LogOut, Menu } from "lucide-react";
+import { Search, User, Menu, Bell } from "lucide-react";
 import { Button } from "../ui/button";
 import { logout } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 
-
-const logoutButton = () => {
+const LogoutButton = () => {
     const router = useRouter();
-
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         router.push('/sign-in');
     }
-     return (
-    <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded">
-      Logout
-    </button>
-  );
-  
+    return (
+        <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded">
+            Logout
+        </button>
+    );
 };
 
-export default logoutButton;
+export default LogoutButton;
 
-
-
-
-
-const Header = ({ setIsMobileOpen }) => (
-
-    
+const Header = ({ setIsMobileOpen }: { setIsMobileOpen: (open: boolean) => void }) => (
   <header className="bg-white border-b border-gray-200 px-6 py-4">
     <div className="flex items-center justify-between">
       <HeaderLeft setIsMobileOpen={setIsMobileOpen} />
@@ -37,7 +28,7 @@ const Header = ({ setIsMobileOpen }) => (
   </header>
 );
 
-const HeaderLeft = ({ setIsMobileOpen }) => (
+const HeaderLeft = ({ setIsMobileOpen }: { setIsMobileOpen: (open: boolean) => void }) => (
   <div className="flex items-center">
     <Button 
       onClick={() => setIsMobileOpen(true)}
@@ -68,27 +59,18 @@ const HeaderRight = () => (
 );
 
 const NotificationButton = () => (
-  <button className="relative p-2 text-gray-600 hover:text-gray-900">
+  <button className="relative p-2 text-gray-600 hover:text-gray-900" aria-label="Notifications">
     <Bell className="h-5 w-5" />
     <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
   </button>
 );
 
 const UserProfile = () => (
-
-    
-    
-    
   <div className="flex items-center space-x-2">
     <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
       <User className="h-4 w-4" />
     </div>
     <span className="text-sm font-medium text-gray-700">Admin User</span>
-    <button className="p-2 text-gray-600 hover:text-gray-900">
-      
-     
-     <logoutButton/>
-    
-    </button>
+    <LogoutButton />
   </div>
 );
