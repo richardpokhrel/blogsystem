@@ -50,10 +50,11 @@ const USERS_KEY = 'users';
 const USER_TOKEN = 'user_token';
 const CURRENT_USER = 'current_user';
 
-export function getAllUsers() {
+export function getAllUsers(): User[] {
   const raw = localStorage.getItem(USERS_KEY);
-  return raw ? JSON.parse(raw) : [];
+  return raw ? JSON.parse(raw) as User[] : [];
 }
+
 
 
 export function saveUser(user: User) {
@@ -62,7 +63,9 @@ export function saveUser(user: User) {
 }
 
 export function userExists(username: string): boolean {
-  return getAllUsers().some(u => u.username === username);
+  return getAllUsers().some((u: User) => u.username === username);
+
+
 }
 
 export function authenticateUser(username: string, password: string): boolean {
