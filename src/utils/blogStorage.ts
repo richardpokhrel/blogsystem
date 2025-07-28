@@ -1,44 +1,42 @@
 import { BlogPost } from "@/types/blog";
+
 const BLOG_KEY = 'blogs';
 
 export function getBlogs(): BlogPost[] {
-    if (typeof window === 'undefined') return [];
-    const data = localStorage.getItem('blogs');
-    return data ? JSON.parse(data) : [];
-
+  if (typeof window === 'undefined') return [];
+  const data = localStorage.getItem(BLOG_KEY);
+  return data ? JSON.parse(data) as BlogPost[] : [];
 }
 
-
-export function saveBlogs(blogs: BlogPost[]) {
-    try {
-        localStorage.setItem('blogs', JSON.stringify(blogs));
-
-    } catch (error: any) {
-        if (error.name === 'QuotaExceededError') {
-        alert('youve reached the localStorage limit. Delete some posts first.');
+export function saveBlogs(blogs: BlogPost[]): void {
+  try {
+    localStorage.setItem(BLOG_KEY, JSON.stringify(blogs));
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+      alert("You've reached the localStorage limit. Delete some posts first.");
     } else {
-        console.error('Failed to save blogs', error)
+      console.error('Failed to save blogs:', error);
     }
-}
-}
-
-
-export function addBlog(blog: BlogPost) {
-    const blogs = getBlogs();
-    saveBlogs([blog, ...blogs]);
+  }
 }
 
-export function updateBlog(updatedBlog: BlogPost) {
-    const blogs = getBlogs().map(b => b.id === updatedBlog.id ? updatedBlog : b);
-    saveBlogs(blogs);
-
+export function addBlog(blog: BlogPost): void {
+  const blogs = getBlogs();
+  saveBlogs([blog, ...blogs]);
 }
 
-export function deleteBlog(blogId: string ) {
-    const blogs = getBlogs().filter(b => b.id !== blogId);
-    saveBlogs(blogs);
+export function updateBlog(updatedBlog: BlogPost): void {
+  const blogs = getBlogs().map((b) =>
+    b.id === updatedBlog.id ? updatedBlog : b
+  );
+  saveBlogs(blogs);
 }
 
-export function getBlogById( id: string ): BlogPost | undefined {
-    return getBlogs().find(b => b.id === id);
+export function deleteBlog(blogId: string): void {
+  const blogs = getBlogs().filter((b) => b.id !== blogId);
+  saveBlogs(blogs);
+}
+
+export function getBlogById(id: string): BlogPost | undefined {
+  return getBlogs().find((b) => b.id === id);
 }
