@@ -90,7 +90,7 @@ export const Navbar = (props: NavbarProps) => {
         {/* Auth section */}
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
-            <UserDropdown />
+            <UserDropdown username={username} onLogout={handleLogout} />
           ) : (
             <Button asChild variant="outline" size="sm">
               <Link href="/sign-in

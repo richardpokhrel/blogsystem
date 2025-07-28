@@ -140,7 +140,7 @@ export default function AdminDashboard() {
                       </p>
                     </div>
                   </div>
-                  <button
+                  <button 
                     onClick={() => setShowEditor(false)}
                     className="w-10 h-10 bg-neutral-200 hover:bg-neutral-300 rounded-xl flex items-center justify-center transition-colors duration-200"
                   >
@@ -221,7 +221,7 @@ export default function AdminDashboard() {
                           <div className="flex items-center space-x-2">
                             <Calendar className="w-5 h-5" />
                             <span className="font-medium">
-                              {new Date(blog.createdAt).toLocaleDateString('en-US', { 
+                              {new Date(blog.CreatedAt).toLocaleDateString('en-US', { 
                                 year: 'numeric', 
                                 month: 'long', 
                                 day: 'numeric' 
@@ -237,7 +237,7 @@ export default function AdminDashboard() {
                       
                       {/* Actions Dropdown - 30% Neutral Secondary */}
                       <div className="relative">
-                        <button
+                        <button aria-level="this is the button"
                           onClick={() => setActiveDropdown(activeDropdown === blog.id ? null : blog.id)}
                           className="w-12 h-12 bg-neutral-100 hover:bg-neutral-200 rounded-2xl flex items-center justify-center transition-all duration-200 group/btn"
                         >

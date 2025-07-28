@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { saveUser, userExists } from "@/utils/auth";
 import { User } from "@/types/user";
+import Link from "next/link";
 
 export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
   const [username, setUsername] = useState('');
@@ -69,7 +70,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <a href="/login" className="underline underline-offset-4">Login</a>
+            <link href="/login" className="underline underline-offset-4">Login</Link>
           </div>
         </CardContent>
       </Card>
